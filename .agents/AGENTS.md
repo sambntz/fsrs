@@ -1,15 +1,15 @@
 # Agent Guide
 
 This file summarizes the project rules for AI agents working on this codebase.
-Before changing behavior, read the relevant source docs in `docs/`.
+Before changing behavior, read the relevant source docs in `.agents/docs/`.
 
 ## Mandatory References
 
-- `docs/PRD.md`: product scope, MVP requirements, stack, domain behavior.
-- `docs/FSRS_RULES.md`: non-negotiable scheduler invariants.
-- `docs/ARCHITECTURE.md`: folder ownership and feature-based structure.
-- `docs/CODE_STYLES.md`: TypeScript, naming, and implementation style.
-- `docs/UI_GUIDELINES.md`: visual style, component choices, and UX rules.
+- `.agents/docs/PRD.md`: product scope, MVP requirements, stack, domain behavior.
+- `.agents/docs/FSRS_RULES.md`: non-negotiable scheduler invariants.
+- `.agents/docs/ARCHITECTURE.md`: folder ownership and feature-based structure.
+- `.agents/docs/CODE_STYLES.md`: TypeScript, naming, and implementation style.
+- `.agents/docs/UI_GUIDELINES.md`: visual style, component choices, and UX rules.
 
 ## Next.js Warning
 
