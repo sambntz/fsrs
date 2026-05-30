@@ -4,6 +4,7 @@ import {
   DASHBOARD_HOME_PATH,
   LOGIN_PATH,
 } from "@/features/auth/constants/routes";
+import { upsertGoogleUser } from "@/features/auth/server/upsert-google-user";
 
 export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
@@ -21,7 +22,11 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     async signIn({ account, profile }) {
-      return account?.provider === "google" && Boolean(profile?.email);
+      if (account?.provider !== "google") {
+        return false;
+      }
+
+      return upsertGoogleUser(profile);
     },
     async redirect({ url, baseUrl }) {
       if (url.startsWith("/") && !url.startsWith("//")) {
