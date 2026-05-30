@@ -2,6 +2,7 @@ import Link from "next/link";
 import { GoogleAuthButton } from "@/features/auth/components/google-auth-button";
 
 type AuthPageProps = {
+  callbackUrl: string;
   title: string;
   description: string;
   googleLabel: string;
@@ -11,6 +12,7 @@ type AuthPageProps = {
 };
 
 export function AuthPage({
+  callbackUrl,
   title,
   description,
   googleLabel,
@@ -43,7 +45,7 @@ export function AuthPage({
           </div>
 
           <div className="rounded-lg border border-zinc-200 bg-white p-6 shadow-sm">
-            <div className="space-y-2">
+            <div className="flex flex-col gap-2">
               <h2 className="text-xl font-semibold tracking-normal text-zinc-950">
                 {googleLabel}
               </h2>
@@ -53,7 +55,7 @@ export function AuthPage({
             </div>
 
             <div className="mt-8">
-              <GoogleAuthButton label={googleLabel} />
+              <GoogleAuthButton callbackUrl={callbackUrl} label={googleLabel} />
             </div>
 
             <p className="mt-6 text-center text-sm text-zinc-600">

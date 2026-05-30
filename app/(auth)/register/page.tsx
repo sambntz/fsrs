@@ -1,14 +1,35 @@
 import type { Metadata } from "next";
-import { AuthPage } from "@/features/auth";
+import { redirect } from "next/navigation";
+import {
+  AuthPage,
+  getCurrentSession,
+  getSafeCallbackUrl,
+} from "@/features/auth";
 
 export const metadata: Metadata = {
   title: "Registro | FSRS Cards",
   description: "Crea tu cuenta con Google en FSRS Cards.",
 };
 
-export default function RegisterPage() {
+type RegisterPageProps = {
+  searchParams: Promise<{
+    callbackUrl?: string | string[];
+  }>;
+};
+
+export default async function RegisterPage({
+  searchParams,
+}: RegisterPageProps) {
+  const callbackUrl = getSafeCallbackUrl((await searchParams).callbackUrl);
+  const session = await getCurrentSession();
+
+  if (session) {
+    redirect(callbackUrl);
+  }
+
   return (
     <AuthPage
+      callbackUrl={callbackUrl}
       title="Crea tu espacio de estudio inteligente."
       description="Empieza con Google y prepara tus mazos para estudiar con FSRS, tarjetas enriquecidas y progreso por usuario."
       googleLabel="Registrarse con Google"

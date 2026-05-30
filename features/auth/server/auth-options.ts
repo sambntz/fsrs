@@ -1,7 +1,12 @@
 import type { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+import {
+  DASHBOARD_HOME_PATH,
+  LOGIN_PATH,
+} from "@/features/auth/constants/routes";
 
 export const authOptions: NextAuthOptions = {
+  secret: process.env.NEXTAUTH_SECRET,
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID ?? "",
@@ -9,18 +14,25 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   pages: {
-    signIn: "/login",
+    signIn: LOGIN_PATH,
   },
   session: {
     strategy: "jwt",
   },
   callbacks: {
-    async signIn({ profile }) {
-      if (!profile) {
-        return false;
+    async signIn({ account, profile }) {
+      return account?.provider === "google" && Boolean(profile?.email);
+    },
+    async redirect({ url, baseUrl }) {
+      if (url.startsWith("/") && !url.startsWith("//")) {
+        return `${baseUrl}${url}`;
       }
 
-      return Boolean(profile.email);
+      if (url.startsWith(baseUrl)) {
+        return url;
+      }
+
+      return `${baseUrl}${DASHBOARD_HOME_PATH}`;
     },
   },
 };
