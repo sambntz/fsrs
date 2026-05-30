@@ -1,0 +1,145 @@
+generator client {
+  provider = "prisma-client"
+  output   = "./generated/prisma"
+}
+
+datasource db {
+  provider     = "mysql"
+  relationMode = "foreignKeys"
+}
+
+enum CardState {
+  NEW
+  LEARNING
+  REVIEW
+  RELEARNING
+
+  @@map("card_state")
+}
+
+enum ReviewRating {
+  AGAIN
+  HARD
+  GOOD
+  EASY
+
+  @@map("review_rating")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(191)
+  email     String   @unique @db.VarChar(191)
+  createdAt DateTime @default(now()) @map("created_at") @db.DateTime(3)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.DateTime(3)
+
+  decks Deck[]
+
+  @@map("users")
+}
+
+model Deck {
+  id          Int      @id @default(autoincrement())
+  name        String   @db.VarChar(191)
+  description String?  @db.Text
+  userId      Int      @map("user_id")
+  createdAt   DateTime @default(now()) @map("created_at") @db.DateTime(3)
+  updatedAt   DateTime @updatedAt @map("updated_at") @db.DateTime(3)
+
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  flashCards FlashCard[]
+
+  @@index([userId], map: "decks_user_id_idx")
+  @@map("decks")
+}
+
+model FlashCard {
+  id        Int      @id @default(autoincrement())
+  front     String   @db.Text
+  back      String   @db.Text
+  deckId    Int      @map("deck_id")
+  createdAt DateTime @default(now()) @map("created_at") @db.DateTime(3)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.DateTime(3)
+
+  deck       Deck               @relation(fields: [deckId], references: [id], onDelete: Cascade)
+  schedule   FlashCardSchedule?
+  reviewLogs ReviewLog[]
+  tags       FlashCardTag[]
+
+  @@index([deckId], map: "flash_cards_deck_id_idx")
+  @@map("flash_cards")
+}
+
+model Tag {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique @db.VarChar(191)
+  createdAt DateTime @default(now()) @map("created_at") @db.DateTime(3)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.DateTime(3)
+
+  flashCards FlashCardTag[]
+
+  @@map("tags")
+}
+
+model FlashCardTag {
+  id          Int      @id @default(autoincrement())
+  flashCardId Int      @map("flash_card_id")
+  tagId       Int      @map("tag_id")
+  createdAt   DateTime @default(now()) @map("created_at") @db.DateTime(3)
+  updatedAt   DateTime @updatedAt @map("updated_at") @db.DateTime(3)
+
+  flashCard FlashCard @relation(fields: [flashCardId], references: [id], onDelete: Cascade)
+  tag       Tag       @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@unique([flashCardId, tagId], map: "flash_card_tags_flash_card_id_tag_id_key")
+  @@index([flashCardId], map: "flash_card_tags_flash_card_id_idx")
+  @@index([tagId], map: "flash_card_tags_tag_id_idx")
+  @@map("flash_card_tags")
+}
+
+model FlashCardSchedule {
+  id            Int       @id @default(autoincrement())
+  flashCardId   Int       @unique @map("flash_card_id")
+  due           DateTime  @db.DateTime(3)
+  stability     Float
+  difficulty    Float
+  elapsedDays   Int       @default(0) @map("elapsed_days")
+  scheduledDays Int       @default(0) @map("scheduled_days")
+  learningSteps Int       @default(0) @map("learning_steps")
+  reps          Int       @default(0)
+  lapses        Int       @default(0)
+  state         CardState @default(NEW)
+  lastReview    DateTime? @map("last_review") @db.DateTime(3)
+  createdAt     DateTime  @default(now()) @map("created_at") @db.DateTime(3)
+  updatedAt     DateTime  @updatedAt @map("updated_at") @db.DateTime(3)
+
+  flashCard FlashCard @relation(fields: [flashCardId], references: [id], onDelete: Cascade)
+
+  @@index([due], map: "flash_card_schedules_due_idx")
+  @@index([state], map: "flash_card_schedules_state_idx")
+  @@index([due, state], map: "flash_card_schedules_due_state_idx")
+  @@map("flash_card_schedules")
+}
+
+model ReviewLog {
+  id              Int          @id @default(autoincrement())
+  flashCardId     Int          @map("flash_card_id")
+  rating          ReviewRating
+  state           CardState
+  due             DateTime     @db.DateTime(3)
+  stability       Float
+  difficulty      Float
+  elapsedDays     Int          @map("elapsed_days")
+  lastElapsedDays Int          @map("last_elapsed_days")
+  scheduledDays   Int          @map("scheduled_days")
+  learningSteps   Int          @default(0) @map("learning_steps")
+  reviewDate      DateTime     @map("review_date") @db.DateTime(3)
+  createdAt       DateTime     @default(now()) @map("created_at") @db.DateTime(3)
+  updatedAt       DateTime     @updatedAt @map("updated_at") @db.DateTime(3)
+
+  flashCard FlashCard @relation(fields: [flashCardId], references: [id], onDelete: Cascade)
+
+  @@index([flashCardId], map: "review_logs_flash_card_id_idx")
+  @@index([reviewDate], map: "review_logs_review_date_idx")
+  @@map("review_logs")
+}
