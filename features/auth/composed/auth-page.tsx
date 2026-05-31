@@ -1,10 +1,13 @@
 import Link from "next/link";
 import { GoogleAuthButton } from "@/features/auth/components/google-auth-button";
+import type { AuthIntent } from "@/features/auth/constants/auth-intent";
 
 type AuthPageProps = {
+  intent: AuthIntent;
   callbackUrl: string;
   title: string;
   description: string;
+  errorMessage?: string;
   googleLabel: string;
   footerText: string;
   footerHref: string;
@@ -12,9 +15,11 @@ type AuthPageProps = {
 };
 
 export function AuthPage({
+  intent,
   callbackUrl,
   title,
   description,
+  errorMessage,
   googleLabel,
   footerText,
   footerHref,
@@ -55,7 +60,17 @@ export function AuthPage({
             </div>
 
             <div className="mt-8">
-              <GoogleAuthButton callbackUrl={callbackUrl} label={googleLabel} />
+              {errorMessage ? (
+                <p className="mb-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm leading-5 text-red-700">
+                  {errorMessage}
+                </p>
+              ) : null}
+
+              <GoogleAuthButton
+                intent={intent}
+                callbackUrl={callbackUrl}
+                label={googleLabel}
+              />
             </div>
 
             <p className="mt-6 text-center text-sm text-zinc-600">
