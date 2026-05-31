@@ -54,7 +54,7 @@ Crear una alternativa moderna y simple a Anki enfocada en:
 
 ## Base de Datos
 
-* SQLite
+* PostgreSQL
 
 ## Autenticación
 
@@ -408,7 +408,7 @@ Usar DOMPurify.
 
 ## Base de datos
 
-* SQLite local para MVP
+* PostgreSQL para MVP y producción
 
 ---
 
@@ -465,7 +465,7 @@ Prisma.
 
 Razones:
 
-* excelente integración SQLite
+* excelente integración PostgreSQL
 * tipado fuerte
 * migrations simples
 * ecosistema enorme
@@ -484,8 +484,8 @@ Razones:
 ## Hosting MVP
 
 * Vercel
-* Turso/SQLite
-* o SQLite local inicialmente
+* Supabase Postgres
+* o PostgreSQL local inicialmente
 
 ---
 

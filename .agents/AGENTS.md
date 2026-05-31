@@ -42,7 +42,7 @@ Primary stack:
 - TailwindCSS
 - shadcn/ui
 - Framer Motion
-- Prisma with SQLite
+- Prisma with PostgreSQL
 - Auth.js with Google provider only
 - `ts-fsrs`
 - DOMPurify

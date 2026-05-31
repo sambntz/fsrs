@@ -1,4 +1,4 @@
-import { PrismaMariaDb } from "@prisma/adapter-mariadb";
+import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "@/database/generated/prisma/client";
 
 const createPrismaClient = () => {
@@ -8,7 +8,7 @@ const createPrismaClient = () => {
     throw new Error("DATABASE_URL is not configured.");
   }
 
-  const adapter = new PrismaMariaDb(databaseUrl);
+  const adapter = new PrismaPg(databaseUrl);
 
   return new PrismaClient({
     adapter,

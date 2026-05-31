@@ -4,8 +4,7 @@ generator client {
 }
 
 datasource db {
-  provider     = "mysql"
-  relationMode = "foreignKeys"
+  provider = "postgresql"
 }
 
 enum CardState {
@@ -30,8 +29,8 @@ model User {
   id        Int      @id @default(autoincrement())
   name      String   @db.VarChar(191)
   email     String   @unique @db.VarChar(191)
-  createdAt DateTime @default(now()) @map("created_at") @db.DateTime(3)
-  updatedAt DateTime @updatedAt @map("updated_at") @db.DateTime(3)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   decks Deck[]
 
@@ -43,8 +42,8 @@ model Deck {
   name        String   @db.VarChar(191)
   description String?  @db.Text
   userId      Int      @map("user_id")
-  createdAt   DateTime @default(now()) @map("created_at") @db.DateTime(3)
-  updatedAt   DateTime @updatedAt @map("updated_at") @db.DateTime(3)
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   flashCards FlashCard[]
@@ -58,8 +57,8 @@ model FlashCard {
   front     String   @db.Text
   back      String   @db.Text
   deckId    Int      @map("deck_id")
-  createdAt DateTime @default(now()) @map("created_at") @db.DateTime(3)
-  updatedAt DateTime @updatedAt @map("updated_at") @db.DateTime(3)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   deck       Deck               @relation(fields: [deckId], references: [id], onDelete: Cascade)
   schedule   FlashCardSchedule?
@@ -73,8 +72,8 @@ model FlashCard {
 model Tag {
   id        Int      @id @default(autoincrement())
   name      String   @unique @db.VarChar(191)
-  createdAt DateTime @default(now()) @map("created_at") @db.DateTime(3)
-  updatedAt DateTime @updatedAt @map("updated_at") @db.DateTime(3)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   flashCards FlashCardTag[]
 
@@ -85,8 +84,8 @@ model FlashCardTag {
   id          Int      @id @default(autoincrement())
   flashCardId Int      @map("flash_card_id")
   tagId       Int      @map("tag_id")
-  createdAt   DateTime @default(now()) @map("created_at") @db.DateTime(3)
-  updatedAt   DateTime @updatedAt @map("updated_at") @db.DateTime(3)
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   flashCard FlashCard @relation(fields: [flashCardId], references: [id], onDelete: Cascade)
   tag       Tag       @relation(fields: [tagId], references: [id], onDelete: Cascade)
@@ -100,7 +99,7 @@ model FlashCardTag {
 model FlashCardSchedule {
   id            Int       @id @default(autoincrement())
   flashCardId   Int       @unique @map("flash_card_id")
-  due           DateTime  @db.DateTime(3)
+  due           DateTime  @db.Timestamptz(3)
   stability     Float
   difficulty    Float
   elapsedDays   Int       @default(0) @map("elapsed_days")
@@ -109,9 +108,9 @@ model FlashCardSchedule {
   reps          Int       @default(0)
   lapses        Int       @default(0)
   state         CardState @default(NEW)
-  lastReview    DateTime? @map("last_review") @db.DateTime(3)
-  createdAt     DateTime  @default(now()) @map("created_at") @db.DateTime(3)
-  updatedAt     DateTime  @updatedAt @map("updated_at") @db.DateTime(3)
+  lastReview    DateTime? @map("last_review") @db.Timestamptz(3)
+  createdAt     DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt     DateTime  @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   flashCard FlashCard @relation(fields: [flashCardId], references: [id], onDelete: Cascade)
 
@@ -126,16 +125,16 @@ model ReviewLog {
   flashCardId     Int          @map("flash_card_id")
   rating          ReviewRating
   state           CardState
-  due             DateTime     @db.DateTime(3)
+  due             DateTime     @db.Timestamptz(3)
   stability       Float
   difficulty      Float
   elapsedDays     Int          @map("elapsed_days")
   lastElapsedDays Int          @map("last_elapsed_days")
   scheduledDays   Int          @map("scheduled_days")
   learningSteps   Int          @default(0) @map("learning_steps")
-  reviewDate      DateTime     @map("review_date") @db.DateTime(3)
-  createdAt       DateTime     @default(now()) @map("created_at") @db.DateTime(3)
-  updatedAt       DateTime     @updatedAt @map("updated_at") @db.DateTime(3)
+  reviewDate      DateTime     @map("review_date") @db.Timestamptz(3)
+  createdAt       DateTime     @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt       DateTime     @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   flashCard FlashCard @relation(fields: [flashCardId], references: [id], onDelete: Cascade)
 

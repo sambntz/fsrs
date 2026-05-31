@@ -2,6 +2,20 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
+Create a `.env` file using `env.example` as a template. The app expects a
+PostgreSQL database URL:
+
+```bash
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/fsrs?schema=public
+```
+
+Then generate the Prisma client and run migrations:
+
+```bash
+npm run db:generate
+npm run db:migrate
+```
+
 First, run the development server:
 
 ```bash
